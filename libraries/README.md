@@ -1,1 +1,1 @@
-
+This folder contains the separate libraries and examples for each component of the robot.

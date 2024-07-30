@@ -5,15 +5,28 @@
 //               |
 //               A0
 //
+// LED for illumination connected to pin 13
 
 void setup() {
   Serial.begin(9600);
+  pinMode(13, OUTPUT);
+  digitalWrite(13, HIGH);
 }
 
 void loop() {
-  if ( LightOrDark(0) ) {
+  Serial.print("LDR 0 : ");
+  Serial.print(ShowLDRValue(0));
+  if (LightOrDark(0)) {
     Serial.println("licht");
   } else {
     Serial.println("donker");
   }
+  Serial.print("LDR 1 : ");
+  Serial.print(ShowLDRValue(1));
+  if (LightOrDark(1)) {
+    Serial.println("licht");
+  } else {
+    Serial.println("donker");
+  }
+  delay(250);
 }

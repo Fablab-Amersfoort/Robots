@@ -17,9 +17,17 @@ int LDRValue[6] = { 0, 0, 0, 0, 0, 0 };
 // calibrate these values as follows:
 // - measure value in darkness (Vd)
 // - measure value in full light (Vl)
-// - threshold = (Vl - Vd) / 2
+// - threshold = Vd + (Vl-Vd) / 2
 
-int LDRthreshold[6] = { 500, 500, 500, 500, 500, 500 };
+int LDRthreshold[6] = { 710, 710, 500, 500, 500, 500 };
+
+// There are 2 functions:
+// ShowLDRValue(LDR): LDR is the number of the LDR to measure (0…5), this shows the actual value, to calibrate the threshold
+// LightOrDark(LDR) : LDR is the number of the LDR to measure, this returns true if light, false if dark
+
+int ShowLDRValue(int LDR) {
+  return analogRead(LDRpin[LDR]);
+}
 
 bool LightOrDark(int LDR) {
   return ( (analogRead(LDRpin[LDR])) > LDRthreshold[LDR] );

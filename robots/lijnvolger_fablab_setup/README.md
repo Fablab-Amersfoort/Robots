@@ -15,7 +15,10 @@ The sketch uses the following arduino pins:
 |A1|LDR right| 
 |A5|Button to step through test modes (pullup to 5V)|
 
-When started up, the sketch starts in mode 0: all LEDS off, motor controller off.
+When started up, the sketch starts in setup mode: LED is blinking.
+When you press the button, it continues in linefollower mode, trying to drive the robot with the white line centered
+When you press the button for a longer time (more than 0,5 s) it starts in test mode:
+mode 0: all LEDS off, motor controller off.
 Pressing the key steps through the following modes:
 
 |mode|description|

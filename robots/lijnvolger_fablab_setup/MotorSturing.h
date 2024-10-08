@@ -20,7 +20,7 @@ void SetupMotorPins() {
 // Speed: 0-100 for motor speed
 
 void ControlMotor(int Motor, int Speed) {
-  int IntSpeed = map(abs(Speed), 0, 100, 100, 255);
+  int IntSpeed = map(abs(Speed), 0, 100, 0, 255);
   if (Speed == 0) {
     IntSpeed = 0;
   }

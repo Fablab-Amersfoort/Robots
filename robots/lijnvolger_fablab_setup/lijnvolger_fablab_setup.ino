@@ -15,10 +15,14 @@ const int KeyPin = A5;
 int STATE = 0;
 int lastActivityTime = 0;
 int motorSpeed = 30;
+bool LightDetected = false;
+
+String TestStates[10] = {"Inital state", "BlinkTest", "LDR left test", "LDR right test", "Motor left test", "Motor right test", "Both motors forward test", "Both motors backward test", "Drive test", "Stop motors test"};
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  Serial.println("FABLAB Robot line follower");
   Serial.println("Serial connection setup");
   pinMode(BLINK_LED, OUTPUT);
   pinMode(LDR_LED, OUTPUT);
@@ -47,27 +51,27 @@ void TestStateMachine() {
   if (STATE == 1) {
     KnipperLed(BLINK_LED);
   }
-  if (STATE == 2) { // left LDR test
+  if (STATE == 2) {  // left LDR test
     digitalWrite(LDR_LED, HIGH);
-    if (LightOrDark(0)) {
-      Serial.println(ShowLDRValue(0));
+    if ((LightOrDark(0)) and (!LightDetected)) {
+      LightDetected = true;
       Serial.println(" licht");
       digitalWrite(BLINK_LED, HIGH);
-    } else {
-      Serial.println(ShowLDRValue(0));
+    } else if ((!LightOrDark(0)) and (LightDetected)) {
+      LightDetected = false;
       Serial.println(" donker");
       digitalWrite(BLINK_LED, LOW);
     }
     digitalWrite(LDR_LED, LOW);
   }
-  if (STATE == 3) { // right LDR test
+  if (STATE == 3) {  // right LDR test
     digitalWrite(LDR_LED, HIGH);
-    if (LightOrDark(1)) {
-      Serial.println(ShowLDRValue(1));
+    if ((LightOrDark(1)) and (!LightDetected)) {
+      LightDetected = true;
       Serial.println(" licht");
       digitalWrite(BLINK_LED, HIGH);
-    } else {
-      Serial.println(ShowLDRValue(1));
+    } else if ((!LightOrDark(1)) and (LightDetected)) {
+      LightDetected = false;
       Serial.println(" donker");
       digitalWrite(BLINK_LED, LOW);
     }
@@ -104,19 +108,26 @@ void TestStateMachine() {
   }
 }
 
+void PrintStateMachine(int state) {
+  Serial.println(TestStates[state]);
+}
+
 void LineFollower() {
-  motorSpeed = 40;
+  motorSpeed = 35;
   digitalWrite(LDR_LED, HIGH);
-  if ((LightOrDark(0)) && (LightOrDark(1))) {
+  if ((LightOrDark(0)) && (LightOrDark(1))) {  // both sensors detect light
+    digitalWrite(BLINK_LED, LOW);
     ControlMotor(0, motorSpeed);
     ControlMotor(1, motorSpeed);
   } else {
     if (!LightOrDark(0)) {  // left detects dark line
-      ControlMotor(0, 0);   // stop left motor
-      delay(STEERDELAY);    // wait
+      digitalWrite(BLINK_LED, HIGH);
+      ControlMotor(0, 0);           // stop left motor
+      delay(STEERDELAY);            // wait
       ControlMotor(0, motorSpeed);  // start left motor
     }
     if (!LightOrDark(1)) {  // right detects dark line
+      digitalWrite(BLINK_LED, HIGH);
       ControlMotor(1, 0);
       delay(STEERDELAY);
       ControlMotor(1, motorSpeed);
@@ -158,6 +169,8 @@ void loop() {
             if (STATE > 1) {
               STATE = 0;
             }
+          } else {
+            PrintStateMachine(STATE);
           }
           Serial.println(STATE);
           digitalWrite(BLINK_LED, LOW);
@@ -172,6 +185,8 @@ void loop() {
   } else {
     if (STATE == 1) {
       LineFollower();
-    } else { KnipperLed(BLINK_LED); }
+    } else {
+      KnipperLed(BLINK_LED);
+    }
   }
 }

@@ -21,7 +21,7 @@ int LDRValue[] = { 0, 0, 0, 0, 0};
 // - measure value in full light (Vl)
 // - threshold = (Vl - Vd) / 2
 
-int LDRthreshold[] = { 250, 250, 500, 500, 500};
+int LDRthreshold[] = { 200, 250, 500, 500, 500};
 
 int ShowLDRValue(int LDR) {
   return analogRead(LDRpin[LDR]);

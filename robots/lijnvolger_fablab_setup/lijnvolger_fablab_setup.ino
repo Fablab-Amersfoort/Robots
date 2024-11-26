@@ -1,3 +1,6 @@
+#include <Adafruit_SSD1306.h>
+#include <splash.h>
+
 #include "LDRLineSensor.h"
 #include "MotorSturing.h"
 

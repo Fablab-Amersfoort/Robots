@@ -5,3 +5,5 @@ Microcontrollers and standard electronic components, like:
 * Distance Sensors
 * Light sensors
 * Stepper motors
+
+![Analytical engine](./Blobs/analyticalEngine1-1.jpg?raw=true "Babbage")

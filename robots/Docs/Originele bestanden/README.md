@@ -1,0 +1,1 @@
+This folder contains the source files for the documentation in LibreOffice format.

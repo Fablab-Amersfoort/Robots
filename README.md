@@ -4,4 +4,4 @@ This repo contains the following folders:
 * libraries: this contains the Arduino modules to control the modules, and some examples.
 * robots: this contains the Arduino code and plans for the robots themselves.
 
-![Analytical engine](./Blobs/moederboard-onderzijde.jpg?raw=true "Robot-mb-onderzijde")
+![Analytical engine](../robots/Blobs/moederboard-onderzijde.jpg?raw=true "Robot-mb-onderzijde")

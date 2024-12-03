@@ -5,3 +5,5 @@ This repo contains the following folders:
 * robots: this contains the Arduino code and plans for the robots themselves.
 
 ![Moederboard onder](./robots/Blobs/moederboard-onderzijde.jpg?raw=true "Robot-mb-onderzijde")
+
+![Moederboard boven](./robots/Blobs/moederboard-bovenzijde.jpg?raw=true "Robot-mb-bovenzijde")

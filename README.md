@@ -10,4 +10,4 @@ This repo contains the following folders:
 
 ![Motorsturing](./robots/Blobs/L298n_motor_driver.jpg?raw=true "Robot-motorsturing-onderzijde")
 
-![Motorsturingaansluiting](./robots/Blobs/Tekening-motorsturing.jpg?raw=true "Robot-aansluiting-motordriver-onderzijde")
+![Motorsturingaansluiting](./robots/Blobs/Tekening-Motorsturing.jpg?raw=true "Robot-aansluiting-motordriver-onderzijde")

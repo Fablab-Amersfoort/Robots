@@ -7,3 +7,7 @@ This repo contains the following folders:
 ![Moederboard onder](./robots/Blobs/moederboard-onderzijde.jpg?raw=true "Robot-mb-onderzijde")
 
 ![Moederboard boven](./robots/Blobs/moederboard-bovenzijde.jpg?raw=true "Robot-mb-bovenzijde")
+
+![Motorsturing](./robots/Blobs/L298n_motor_driver.jpg?raw=true "Robot-motorsturing-onderzijde")
+
+![Motorsturing-aansluiting](./robots/Blobs/motorsturing_aansluiting.jpg?raw=true "Robot-aansluiting_motordriver-onderzijdezijde")

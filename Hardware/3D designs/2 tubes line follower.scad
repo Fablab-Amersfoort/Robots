@@ -1,3 +1,4 @@
+$fn = 20;
 difference() {
 translate([-40,-10,0]) cube([80,25,1]);
     {

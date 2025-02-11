@@ -1,6 +1,8 @@
-#include <Adafruit_SSD1306.h>
-#include <splash.h>
+// Liquidcrystal display
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
+// Robot Libraries from fablab
 #include "LDRLineSensor.h"
 #include "MotorSturing.h"
 
@@ -14,13 +16,15 @@
 
 long LastBlinkTime = 0;
 long LastMotorSwitchTime = 0;
-const int KeyPin = A5;
-int STATE = 0;
+const int KeyPin = A3;
+int STATE, LAST_STATE = 0;
 int lastActivityTime = 0;
 int motorSpeed = 30;
 bool LightDetected = false;
 
-String TestStates[10] = {"Inital state", "BlinkTest", "LDR left test", "LDR right test", "Motor left test", "Motor right test", "Both motors forward test", "Both motors backward test", "Drive test", "Stop motors test"};
+String TestStates[10] = { "Inital state", "BlinkTest", "LDR left", "LDR right", "Motor left", "Motor right", "Motors forward", "Motors backward", "Drive test", "Stop motors" };
+
+LiquidCrystal_I2C lcd(0x27, 20, 4);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 void setup() {
   // put your setup code here, to run once:
@@ -31,6 +35,13 @@ void setup() {
   pinMode(LDR_LED, OUTPUT);
   pinMode(KeyPin, INPUT_PULLUP);
   SetupMotorPins();
+
+  lcd.init();  // initialize the lcd
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Fablab robot module");
+  LAST_STATE = -1;
 }
 
 void KnipperLed(int pin) {
@@ -50,7 +61,19 @@ void MotorForwardBackward(int motor) {
   }
 }
 
+void DisplayTestmode(int state) {
+  lcd.clear();
+  lcd.setCursor(3, 0);
+  lcd.print("testmode " + String(state));
+  lcd.setCursor(0, 2);
+  lcd.print(TestStates[STATE]);
+}
+
 void TestStateMachine() {
+  if (STATE != LAST_STATE) {
+    DisplayTestmode(STATE);
+    LAST_STATE = STATE;
+  }
   if (STATE == 1) {
     KnipperLed(BLINK_LED);
   }
@@ -107,7 +130,6 @@ void TestStateMachine() {
   if (STATE == 9) {
     StopMotor(0);
     StopMotor(1);
-    STATE = 0;
   }
 }
 
@@ -138,7 +160,7 @@ void LineFollower() {
   }
 }
 
-bool TestMode = false;
+bool TestMode = true;
 bool lastButtonState = false;
 bool LongPressActive = false;
 
@@ -148,15 +170,6 @@ void loop() {
     if (!lastButtonState) {
       if ((millis() - lastActivityTime) > DEBOUNCE_DELAY) {
         lastActivityTime = millis();
-      }
-    } else if ((millis() - lastActivityTime > LONGPRESS_TIME) && (!LongPressActive))  // Button long press
-    {
-      LongPressActive = true;
-      STATE = 0;
-      Serial.println("Long press");
-      TestMode = !TestMode;
-      if (TestMode) {
-        Serial.println("Test mode active");
       }
     }
     lastButtonState = HIGH;
@@ -168,12 +181,8 @@ void loop() {
         if ((millis() - lastActivityTime) > DEBOUNCE_DELAY) {
           Serial.println("short press");
           STATE += 1;
-          if (!TestMode) {
-            if (STATE > 1) {
-              STATE = 0;
-            }
-          } else {
-            PrintStateMachine(STATE);
+          if (STATE > 9) {
+            STATE = 0;
           }
           Serial.println(STATE);
           digitalWrite(BLINK_LED, LOW);

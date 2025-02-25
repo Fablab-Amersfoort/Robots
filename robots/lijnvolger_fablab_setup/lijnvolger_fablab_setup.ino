@@ -16,11 +16,14 @@
 
 long LastBlinkTime = 0;
 long LastMotorSwitchTime = 0;
-const int KeyPin = A3;
+const int KeyPin = A5;
 int STATE, LAST_STATE = 0;
 int lastActivityTime = 0;
 int motorSpeed = 30;
+int data, old_data = 0;
 bool LightDetected = false;
+long ShowDelay = 500;
+long LastShowTime = 0;
 
 String TestStates[10] = { "Inital state", "BlinkTest", "LDR left", "LDR right", "Motor left", "Motor right", "Motors forward", "Motors backward", "Drive test", "Stop motors" };
 
@@ -69,6 +72,16 @@ void DisplayTestmode(int state) {
   lcd.print(TestStates[STATE]);
 }
 
+void DisplayTestData(String data) {
+  if ((millis() - LastShowTime) > ShowDelay) {
+    LastShowTime = millis();
+    lcd.setCursor(11, 2);
+    lcd.print("---------");
+    lcd.setCursor(11, 2);
+    lcd.print(data);
+  }
+}
+
 void TestStateMachine() {
   if (STATE != LAST_STATE) {
     DisplayTestmode(STATE);
@@ -79,12 +92,19 @@ void TestStateMachine() {
   }
   if (STATE == 2) {  // left LDR test
     digitalWrite(LDR_LED, HIGH);
+    data = ShowLDRValue(0);
+    if (data != old_data) {
+      DisplayTestData(String(data));
+      old_data = data;
+    }
     if ((LightOrDark(0)) and (!LightDetected)) {
       LightDetected = true;
+      DisplayTestData(String(data));
       Serial.println(" licht");
       digitalWrite(BLINK_LED, HIGH);
     } else if ((!LightOrDark(0)) and (LightDetected)) {
       LightDetected = false;
+      DisplayTestData(String(data));
       Serial.println(" donker");
       digitalWrite(BLINK_LED, LOW);
     }
@@ -92,12 +112,19 @@ void TestStateMachine() {
   }
   if (STATE == 3) {  // right LDR test
     digitalWrite(LDR_LED, HIGH);
+    data = ShowLDRValue(1);
+    if (data != old_data) {
+      DisplayTestData(String(data));
+      old_data = data;
+    }
     if ((LightOrDark(1)) and (!LightDetected)) {
       LightDetected = true;
+      DisplayTestData(String(data));
       Serial.println(" licht");
       digitalWrite(BLINK_LED, HIGH);
     } else if ((!LightOrDark(1)) and (LightDetected)) {
       LightDetected = false;
+      DisplayTestData(String(data));
       Serial.println(" donker");
       digitalWrite(BLINK_LED, LOW);
     }
@@ -137,28 +164,6 @@ void PrintStateMachine(int state) {
   Serial.println(TestStates[state]);
 }
 
-void LineFollower() {
-  motorSpeed = 35;
-  digitalWrite(LDR_LED, HIGH);
-  if ((LightOrDark(0)) && (LightOrDark(1))) {  // both sensors detect light
-    digitalWrite(BLINK_LED, LOW);
-    ControlMotor(0, motorSpeed);
-    ControlMotor(1, motorSpeed);
-  } else {
-    if (!LightOrDark(0)) {  // left detects dark line
-      digitalWrite(BLINK_LED, HIGH);
-      ControlMotor(0, 0);           // stop left motor
-      delay(STEERDELAY);            // wait
-      ControlMotor(0, motorSpeed);  // start left motor
-    }
-    if (!LightOrDark(1)) {  // right detects dark line
-      digitalWrite(BLINK_LED, HIGH);
-      ControlMotor(1, 0);
-      delay(STEERDELAY);
-      ControlMotor(1, motorSpeed);
-    }
-  }
-}
 
 bool TestMode = true;
 bool lastButtonState = false;
@@ -192,13 +197,6 @@ void loop() {
       lastButtonState = LOW;
     }
   }
-  if (TestMode) {
-    TestStateMachine();
-  } else {
-    if (STATE == 1) {
-      LineFollower();
-    } else {
-      KnipperLed(BLINK_LED);
-    }
-  }
+
+  TestStateMachine();
 }

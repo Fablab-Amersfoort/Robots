@@ -1,0 +1,18 @@
+Hardware componenten t.b.v. Versie I
+
+- grondplaat
+- zwenkwiel met verhoging
+- L-wiel met motor
+- R-wiel met motor
+- H-brug voor motorsturing
+- accu's met accuhouder (7,2 V)
+- Arduino
+- Shield voor arduino (schroefbevestiging)
+- LDR - links
+- LDR - rechts
+- weerstanden 1 x voor LED(180); 2 x voor LDR (10K)
+- LED
+- printplaat t.b.v. LDR's en LED
+- afstandhouder met boutjes (eventueel)
+- LDR-afscherming (uitvoering zwart)
+- Display 20 x 4 I2C t.b.v. testen
